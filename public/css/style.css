@@ -1,0 +1,880 @@
+/*
+ * ============================================================
+ * LMLinga – Barangay Health Center Chatbot
+ * File: public/css/style.css
+ * Description: All custom styles for the chatbot UI.
+ *              Follows LMLinga design system (green healthcare theme).
+ * ============================================================
+ */
+
+/* ============================================================
+   1. CSS VARIABLES (Design Tokens)
+   All colors, fonts, and spacing are centralized here.
+   Changing a value here updates the entire UI.
+============================================================ */
+:root {
+    /* --- Color Palette --- */
+    --color-primary:        #22C55E;   /* Main green (buttons, active states) */
+    --color-secondary:      #3DA653;   /* Darker green (hover, sidebar bg) */
+    --color-accent:         #51C269;   /* Mid-tone green (highlights) */
+    --color-bg-light:       #DFF5E5;   /* Page background tint */
+    --color-highlight:      #BBF7D0;   /* Soft highlight (bot bubbles) */
+    --color-dark-green:     #0B3D0B;   /* Text on light backgrounds */
+    --color-green-1:        #1F7A1F;   /* Sidebar base */
+    --color-green-2:        #28A71B;   /* Sidebar gradient mid */
+    --color-green-3:        #145214;   /* Sidebar gradient dark */
+
+    /* --- Neutral Palette --- */
+    --color-white:          #FFFFFF;
+    --color-gray-50:        #F8FFFE;
+    --color-gray-100:       #F0FAF4;
+    --color-gray-200:       #E2F0E7;
+    --color-gray-400:       #9CB8A4;
+    --color-gray-600:       #4A6B52;
+    --color-gray-800:       #1E3A24;
+    --color-text-body:      #2D4A33;
+    --color-text-muted:     #5A7A62;
+
+    /* --- Typography --- */
+    --font-primary:         'Poppins', sans-serif;     /* Body + headings */
+    --font-accent:          'Protest Riot', sans-serif; /* Branding only */
+
+    /* --- Sizing & Spacing --- */
+    --sidebar-width:        260px;
+    --header-height:        72px;
+    --input-bar-height:     84px;
+    --border-radius-sm:     8px;
+    --border-radius-md:     14px;
+    --border-radius-lg:     20px;
+    --border-radius-xl:     28px;
+    --bubble-max-width:     72%;
+
+    /* --- Shadows --- */
+    --shadow-sm:   0 1px 4px rgba(11, 61, 11, 0.08);
+    --shadow-md:   0 4px 16px rgba(11, 61, 11, 0.12);
+    --shadow-lg:   0 8px 32px rgba(11, 61, 11, 0.16);
+
+    /* --- Transition --- */
+    --transition-fast:      150ms ease;
+    --transition-normal:    250ms ease;
+}
+
+/* ============================================================
+   2. GLOBAL RESET & BASE
+============================================================ */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    overflow: hidden; /* Prevent body scroll; chat area scrolls internally */
+    font-family: var(--font-primary);
+    font-size: 15px;
+    color: var(--color-text-body);
+    background-color: var(--color-bg-light);
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: var(--font-primary);
+}
+
+/* ============================================================
+   3. CHATBOT WRAPPER
+   Full-viewport two-column layout
+============================================================ */
+.chatbot-wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* ============================================================
+   4. LEFT SIDEBAR
+============================================================ */
+.sidebar {
+    width: var(--sidebar-width);
+    min-width: var(--sidebar-width);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 16px;
+
+    /* Lush green gradient background */
+    background: linear-gradient(
+        160deg,
+        var(--color-green-3) 0%,
+        var(--color-green-1) 40%,
+        var(--color-green-2) 100%
+    );
+
+    color: var(--color-white);
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: transform var(--transition-normal);
+    z-index: 100;
+    flex-shrink: 0;
+
+    /* Subtle texture using box-shadow inset */
+    box-shadow: inset -1px 0 0 rgba(255,255,255,0.07), var(--shadow-lg);
+}
+
+/* --- Sidebar Brand / Logo --- */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 6px 12px;
+ 
+}
+
+.brand-icon {
+    width: 38px;
+    height: 38px;
+    background-color: white;
+
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.brand-name {
+    font-family: var(--font-accent);   /* Protest Riot for branding */
+    font-size: 1.45rem;
+    letter-spacing: 0.5px;
+    color: var(--color-white);
+}
+
+/* --- Sidebar Divider --- */
+.sidebar-divider {
+    border-color: rgba(255,255,255,0.15);
+    margin: 8px 0;
+}
+
+/* --- User Profile Block --- */
+.sidebar-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: var(--border-radius-md);
+    margin: 4px 0;
+}
+
+.profile-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    color: var(--color-dark-green);
+    border: 2px solid rgba(255,255,255,0.3);
+    flex-shrink: 0;
+}
+
+.profile-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--color-white);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.profile-role {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.65);
+    margin: 2px 0 0;
+}
+
+/* --- Sidebar Navigation --- */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 0;
+}
+
+.nav-link-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.78);
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.nav-link-item i {
+    font-size: 1rem;
+    width: 18px;
+    text-align: center;
+}
+
+.nav-link-item:hover {
+    background: rgba(255,255,255,0.12);
+    color: var(--color-white);
+}
+
+.nav-link-item.active {
+    background: rgba(255,255,255,0.2);
+    color: var(--color-white);
+    font-weight: 600;
+}
+
+/* --- Spacer + Footer (Logout) --- */
+.sidebar-spacer {
+    flex: 1;
+}
+
+.sidebar-footer {
+    padding: 8px 0 4px;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    width: 100%;
+    transition: background var(--transition-fast), color var(--transition-fast);
+    background: rgba(255,255,255,0.06);
+}
+
+.logout-btn:hover {
+    background: rgba(255, 80, 80, 0.2);
+    color: #FFAAAA;
+}
+
+.logout-btn i {
+    font-size: 1rem;
+}
+
+/* --- Sidebar close button (mobile only) --- */
+.sidebar-close-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    color: white;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition-fast);
+}
+
+.sidebar-close-btn:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+/* ============================================================
+   5. MAIN CHAT AREA
+============================================================ */
+.chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--color-gray-50);
+    min-width: 0; /* Prevent flex overflow */
+}
+
+/* ============================================================
+   6. CHAT HEADER
+============================================================ */
+.chat-header {
+    height: var(--header-height);
+    min-height: var(--header-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-gray-200);
+    box-shadow: var(--shadow-sm);
+    gap: 12px;
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+/* Mobile hamburger */
+.hamburger-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: var(--border-radius-sm);
+    background: var(--color-bg-light);
+    color: var(--color-secondary);
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.hamburger-btn:hover {
+    background: var(--color-highlight);
+}
+
+/* Brand (logo + title) */
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.header-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(34,197,94,0.35);
+}
+
+.header-title {
+    font-family: var(--font-accent);
+    font-size: 1.2rem;
+    color: var(--color-dark-green);
+    line-height: 1;
+    margin: 0;
+}
+
+.header-subtitle {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    margin: 2px 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Language Toggle Buttons */
+.lang-toggle-group {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+.lang-btn {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: var(--font-primary);
+    color: var(--color-text-muted);
+    background: var(--color-gray-100);
+    border: 1.5px solid var(--color-gray-200);
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+
+.lang-btn:hover {
+    background: var(--color-highlight);
+    border-color: var(--color-accent);
+    color: var(--color-dark-green);
+}
+
+.lang-btn.active {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-white);
+    box-shadow: 0 2px 8px rgba(34,197,94,0.35);
+}
+
+/* ============================================================
+   7. CHAT MESSAGES AREA
+   Scrollable, flex column with auto margin at top
+============================================================ */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    /* Custom scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-highlight) transparent;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: var(--color-highlight);
+    border-radius: 10px;
+}
+
+/* ---- Message Rows ---- */
+.message-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    animation: messageSlideIn 0.25s ease forwards;
+}
+
+/* Bot messages: left-aligned */
+.bot-row {
+    align-self: flex-start;
+    max-width: var(--bubble-max-width);
+}
+
+/* User messages: right-aligned */
+.user-row {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+    max-width: var(--bubble-max-width);
+}
+
+/* ---- Bot Avatar ---- */
+.bot-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(34,197,94,0.3);
+}
+
+/* ---- Chat Bubbles ---- */
+.message-bubble {
+    padding: 12px 16px;
+    border-radius: var(--border-radius-lg);
+    line-height: 1.55;
+    font-size: 0.875rem;
+    position: relative;
+    word-break: break-word;
+}
+
+/* Bot bubble: soft green */
+.bot-bubble {
+    background: var(--color-highlight);
+    color: var(--color-dark-green);
+    border-bottom-left-radius: 4px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* User bubble: white with green accent */
+.user-bubble {
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-bottom-right-radius: 4px;
+    box-shadow: var(--shadow-sm);
+}
+
+/* Timestamp in bubble */
+.message-time {
+    display: block;
+    font-size: 0.68rem;
+    margin-top: 6px;
+    opacity: 0.6;
+}
+
+/* Bot greeting name */
+.greeting-text {
+    font-size: 0.95rem;
+    margin-bottom: 4px;
+}
+
+/* Language shortcut buttons inside greeting bubble */
+.bubble-lang-shortcuts {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.bubble-lang-btn {
+    padding: 5px 12px;
+    border-radius: 16px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    font-family: var(--font-primary);
+    background: rgba(11, 61, 11, 0.08);
+    color: var(--color-dark-green);
+    border: 1.5px solid rgba(11,61,11,0.15);
+    transition: all var(--transition-fast);
+}
+
+.bubble-lang-btn:hover {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+/* ---- System / Disclaimer Message ---- */
+.system-message {
+    align-self: center;
+    background: rgba(34,197,94,0.08);
+    border: 1px dashed var(--color-accent);
+    border-radius: var(--border-radius-md);
+    padding: 8px 14px;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    max-width: 90%;
+    text-align: left;
+    line-height: 1.5;
+}
+
+.system-message i {
+    color: var(--color-accent);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+/* ---- Quick Chips ---- */
+.quick-chips {
+    align-self: flex-start;
+    max-width: 100%;
+}
+
+.chips-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-bottom: 8px;
+    padding-left: 2px;
+}
+
+.chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chip-btn {
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    font-family: var(--font-primary);
+    background: var(--color-white);
+    color: var(--color-secondary);
+    border: 1.5px solid var(--color-highlight);
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+}
+
+.chip-btn:hover {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ---- Typing Indicator ---- */
+.typing-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    align-self: flex-start;
+    animation: messageSlideIn 0.2s ease forwards;
+}
+
+.typing-bubble {
+    background: var(--color-highlight);
+    border-radius: var(--border-radius-lg);
+    border-bottom-left-radius: 4px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-secondary);
+    animation: typingBounce 1.2s infinite;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* ============================================================
+   8. CHAT INPUT BAR
+============================================================ */
+.chat-input-bar {
+    padding: 12px 20px 10px;
+    background: var(--color-white);
+    border-top: 1px solid var(--color-gray-200);
+    flex-shrink: 0;
+    box-shadow: 0 -2px 12px rgba(11, 61, 11, 0.06);
+}
+
+.input-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--color-gray-100);
+    border: 1.5px solid var(--color-gray-200);
+    border-radius: 28px;
+    padding: 6px 6px 6px 12px;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.input-inner:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(34,197,94,0.12);
+    background: var(--color-white);
+}
+
+/* Attach button (disabled placeholder) */
+.input-icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: var(--color-gray-400);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+    transition: color var(--transition-fast);
+}
+
+.input-icon-btn:not(:disabled):hover {
+    color: var(--color-secondary);
+}
+
+/* Text input field */
+.message-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: var(--font-primary);
+    font-size: 0.875rem;
+    color: var(--color-text-body);
+    outline: none;
+    padding: 6px 0;
+    min-width: 0;
+}
+
+.message-input::placeholder {
+    color: var(--color-gray-400);
+}
+
+/* Send button */
+.send-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+    transition: all var(--transition-fast);
+    box-shadow: 0 2px 8px rgba(34,197,94,0.4);
+}
+
+.send-btn:hover {
+    background: var(--color-secondary);
+    transform: scale(1.05);
+    box-shadow: 0 4px 14px rgba(34,197,94,0.45);
+}
+
+.send-btn:active {
+    transform: scale(0.97);
+}
+
+/* Input disclaimer text */
+.input-disclaimer {
+    font-size: 0.68rem;
+    color: var(--color-gray-400);
+    text-align: center;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.input-disclaimer i {
+    color: var(--color-accent);
+}
+
+/* ============================================================
+   9. SIDEBAR OVERLAY (mobile backdrop)
+============================================================ */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 99;
+    backdrop-filter: blur(2px);
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* ============================================================
+   10. ANIMATIONS
+============================================================ */
+@keyframes messageSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30%            { transform: translateY(-5px); opacity: 1; }
+}
+
+/* ============================================================
+   11. RESPONSIVE (MOBILE)
+   Sidebar becomes an off-canvas drawer on small screens.
+============================================================ */
+@media (max-width: 991.98px) {
+
+    /* Sidebar hidden by default on mobile; slides in when .active */
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 200;
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    /* Full width main area */
+    .chat-main {
+        width: 100%;
+    }
+
+    /* Compress header on mobile */
+    .chat-header {
+        padding: 0 14px;
+    }
+
+    /* Stack language buttons compactly */
+    .lang-toggle-group {
+        gap: 4px;
+    }
+
+    .lang-btn {
+        padding: 5px 8px;
+        font-size: 0.7rem;
+    }
+
+    /* Smaller chat bubbles on mobile */
+    .bot-row,
+    .user-row {
+        max-width: 88%;
+    }
+
+    /* Reduce chat padding on mobile */
+    .chat-messages {
+        padding: 14px 14px;
+    }
+
+    /* Input bar tighter on mobile */
+    .chat-input-bar {
+        padding: 10px 14px 8px;
+    }
+}
+
+@media (max-width: 575.98px) {
+
+    /* Hide language emoji flags on very small screens */
+    .lang-btn {
+        font-size: 0.67rem;
+        padding: 4px 7px;
+    }
+
+    /* Header title truncate */
+    .header-title {
+        font-size: 1rem;
+    }
+
+    .header-subtitle {
+        display: none;
+    }
+
+    /* Quick chips scroll horizontally */
+    .chips-row {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+    }
+
+    .chips-row::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* ============================================================
+   12. UTILITY CLASSES
+============================================================ */
+.mt-2 { margin-top: 8px; }
