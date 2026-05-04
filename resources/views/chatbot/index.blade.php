@@ -67,10 +67,7 @@
                 <i class="bi bi-person-lines-fill"></i>
                 <span>My Profile</span>
             </a>
-            <a href="#" class="nav-link-item">
-                <i class="bi bi-bell-fill"></i>
-                <span>Health Alerts</span>
-            </a>
+            
         </nav>
 
         {{-- Spacer pushes logout to bottom --}}

@@ -429,9 +429,9 @@ button {
 }
 
 
-/* Login card — same size as register */
+/* Login card has slightly different ratio */
 .login-card {
-    max-width: 1400px;
+    max-width: 900px;
 }
 
 /* --- LEFT PANEL (Registration branding side) --- */

@@ -46,15 +46,19 @@ function appendUserMessage(text) {
     scrollToBottom();
 }
 
-function appendBotMessage(htmlContent) {
+function appendBotMessage(text, isHTML = false) {
+    const content = isHTML ? text : escapeHTML(text).replace(/\n/g, "<br>");
+
     const row = document.createElement('div');
     row.classList.add('message-row', 'bot-row');
+
     row.innerHTML = `
         <div class="bot-avatar"><i class="bi bi-robot"></i></div>
         <div class="message-bubble bot-bubble">
-            <div>${htmlContent}</div>
+            <div>${content}</div>
             <span class="message-time">${getTimestamp()}</span>
         </div>`;
+        
     chatMessages.appendChild(row);
     scrollToBottom();
 }
@@ -124,7 +128,7 @@ async function sendMessage() {
     } catch (error) {
         console.error("Debugger Error:", error);
         removeTypingIndicator();
-        appendBotMessage("Connection failed. Ensure Laravel and Ollama are running.");
+        appendBotMessage("Under development issue. Please try again later.");
     } finally {
         state.isTyping = false;
         sendBtn.disabled = false;
@@ -151,14 +155,23 @@ langBtns.forEach(btn => {
     btn.addEventListener('click', function() {
         const selectedLang = this.dataset.lang;
         updateLanguageState(selectedLang);
-        
+
         langBtns.forEach(b => b.classList.remove('active'));
         this.classList.add('active');
-        
-        // FIX: Instead of just a text message, send a hidden "refresh" 
-        // to the bot so it pulls the data from the NEW folder path immediately.
-        // Or simply tell the user to ask their question again in that language.
-        appendBotMessage(`Language set to ${this.innerText}. How can I help?`);
+
+        let message;
+
+        if (selectedLang === 'tl') {
+            message = `Language set to <strong>${this.innerText}</strong>. Paano kita matutulungan?`;
+        } 
+        else if (selectedLang === 'bi') {
+            message = `Language set to <strong>${this.innerText}</strong>. Paano ko ika matatabangan?`;
+        } 
+        else {
+            message = `Language set to <strong>${this.innerText}</strong>. How can I help?`;
+        }
+
+        appendBotMessage(message, true);
     });
 });
 
@@ -173,7 +186,10 @@ document.addEventListener('click', function(e) {
             b.classList.toggle('active', b.dataset.lang === selectedLang);
         });
 
-        appendBotMessage(`Language changed to <strong>${e.target.innerText}</strong>`);
+        appendBotMessage(
+    `Language changed to <strong>${e.target.innerText}</strong>`,
+    true
+);
     }
 });
 
